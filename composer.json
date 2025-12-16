@@ -1,0 +1,20 @@
+{
+  "name": "netresearch/agent-cli-tools",
+  "description": "CLI tool management for coding agents. Use when a command fails with 'command not found', installing/updating CLI tools, setting up project environments, or checking dependencies. Provides auto-instal",
+  "type": "ai-agent-skill",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Netresearch DTT GmbH",
+      "email": "plugins@netresearch.de",
+      "homepage": "https://www.netresearch.de/",
+      "role": "Manufacturer"
+    }
+  ],
+  "require": {
+    "netresearch/composer-agent-skill-plugin": "*"
+  },
+  "extra": {
+    "ai-agent-skill": "SKILL.md"
+  }
+}
