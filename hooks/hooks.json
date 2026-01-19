@@ -1,0 +1,17 @@
+{
+  "description": "CLI tools hooks for automatic tool detection and installation prompts",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/scripts/detect_missing_tool.py",
+            "timeout": 3
+          }
+        ]
+      }
+    ]
+  }
+}
