@@ -10,6 +10,5 @@
   },
   "skills": [
     "./skills/cli-tools"
-  ],
-  "hooks": "./hooks/hooks.json"
+  ]
 }
