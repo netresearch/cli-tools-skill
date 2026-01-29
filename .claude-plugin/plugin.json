@@ -1,6 +1,6 @@
 {
   "name": "cli-tools",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "CLI tool management with automatic missing-tool detection, installation, and auditing",
   "repository": "https://github.com/netresearch/cli-tools-skill",
   "license": "MIT",
@@ -10,6 +10,5 @@
   },
   "skills": [
     "./skills/cli-tools"
-  ],
-  "hooks": "./hooks/hooks.json"
+  ]
 }
