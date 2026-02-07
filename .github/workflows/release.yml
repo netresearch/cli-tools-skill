@@ -15,39 +15,61 @@ jobs:
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
+        uses: step-security/harden-runner@5ef0c079ce82195b2a36a210272d6b661572d83e # v2.14.2
         with:
           egress-policy: audit
 
       - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Get version from tag
         id: version
-        run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        run: echo "version=${{GITHUB_REF#refs/tags/}}" >> $GITHUB_OUTPUT
 
-      - name: Create skill package
+      - name: Create cli-tools skill package
         run: |
-          mkdir -p dist
-          # Copy skill files from new structure
-          cp skills/cli-tools/SKILL.md dist/
-          cp LICENSE dist/
-          [ -d "skills/cli-tools/references" ] && cp -r skills/cli-tools/references dist/
-          [ -d "skills/cli-tools/scripts" ] && cp -r skills/cli-tools/scripts dist/
-          [ -d "skills/cli-tools/assets" ] && cp -r skills/cli-tools/assets dist/
-          [ -d "skills/cli-tools/templates" ] && cp -r skills/cli-tools/templates dist/
+          mkdir -p dist-skill
+          cp skills/cli-tools/SKILL.md dist-skill/
+          cp LICENSE dist-skill/
+          [ -d "skills/cli-tools/references" ] && cp -r skills/cli-tools/references dist-skill/
+          [ -d "skills/cli-tools/scripts" ] && cp -r skills/cli-tools/scripts dist-skill/
+          [ -d "skills/cli-tools/assets" ] && cp -r skills/cli-tools/assets dist-skill/
+          [ -d "skills/cli-tools/templates" ] && cp -r skills/cli-tools/templates dist-skill/
+          [ -d "skills/cli-tools/examples" ] && cp -r skills/cli-tools/examples dist-skill/
+          [ -f "skills/cli-tools/checkpoints.yaml" ] && cp skills/cli-tools/checkpoints.yaml dist-skill/
+          cd dist-skill
+          zip -r ../cli-tools-skill-${{ steps.version.outputs.version }}.zip .
+          tar -czvf ../cli-tools-skill-${{ steps.version.outputs.version }}.tar.gz .
+
+      - name: Create cli-tools plugin package
+        run: |
+          mkdir -p dist-plugin
+          # Include cli-tools skill files
+          mkdir -p dist-plugin/skills/cli-tools
+          cp skills/cli-tools/SKILL.md dist-plugin/skills/cli-tools/
+          [ -d "skills/cli-tools/references" ] && cp -r skills/cli-tools/references dist-plugin/skills/cli-tools/
+          [ -d "skills/cli-tools/scripts" ] && cp -r skills/cli-tools/scripts dist-plugin/skills/cli-tools/
+          [ -d "skills/cli-tools/assets" ] && cp -r skills/cli-tools/assets dist-plugin/skills/cli-tools/
+          [ -d "skills/cli-tools/templates" ] && cp -r skills/cli-tools/templates dist-plugin/skills/cli-tools/
+          [ -d "skills/cli-tools/examples" ] && cp -r skills/cli-tools/examples dist-plugin/skills/cli-tools/
+          [ -f "skills/cli-tools/checkpoints.yaml" ] && cp skills/cli-tools/checkpoints.yaml dist-plugin/skills/cli-tools/
+          cp LICENSE dist-plugin/
           # Include plugin manifest
-          [ -d ".claude-plugin" ] && cp -r .claude-plugin dist/
-          cd dist
-          zip -r ../cli-tools-${{ steps.version.outputs.version }}.zip .
-          tar -czvf ../cli-tools-${{ steps.version.outputs.version }}.tar.gz .
+          [ -d ".claude-plugin" ] && cp -r .claude-plugin dist-plugin/
+          [ -d "hooks" ] && cp -r hooks dist-plugin/
+          [ -d "scripts" ] && cp -r scripts dist-plugin/ && find dist-plugin/scripts -name '__pycache__' -type d -exec rm -rf {} + 2>/dev/null || true
+          cd dist-plugin
+          zip -r ../cli-tools-plugin-${{ steps.version.outputs.version }}.zip .
+          tar -czvf ../cli-tools-plugin-${{ steps.version.outputs.version }}.tar.gz .
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@c95fe1489396fe8a9eb87c0abf8aa5b2ef267fda # v2.2.1
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.5.0
         with:
           files: |
-            cli-tools-${{ steps.version.outputs.version }}.zip
-            cli-tools-${{ steps.version.outputs.version }}.tar.gz
+            cli-tools-skill-${{ steps.version.outputs.version }}.zip
+            cli-tools-skill-${{ steps.version.outputs.version }}.tar.gz
+            cli-tools-plugin-${{ steps.version.outputs.version }}.zip
+            cli-tools-plugin-${{ steps.version.outputs.version }}.tar.gz
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
