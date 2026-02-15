@@ -1,6 +1,6 @@
 ---
 name: cli-tools
-description: "Use when commands fail with 'command not found', installing missing CLI tools, auditing project environments, or batch-updating managed tools."
+description: "Use when commands fail with 'command not found', when installing missing CLI tools, when auditing project environments, or when batch-updating managed tools."
 ---
 
 # CLI Tools Skill
