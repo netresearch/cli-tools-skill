@@ -1,6 +1,6 @@
 ---
 name: cli-tools
-description: "Agent Skill: CLI tool management. Use when commands fail with 'command not found', installing tools, or checking project environments. By Netresearch."
+description: "Use when commands fail with 'command not found', installing missing CLI tools, auditing project environments, or batch-updating managed tools."
 ---
 
 # CLI Tools Skill
