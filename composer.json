@@ -1,5 +1,8 @@
 {
-  "name": "netresearch/agent-cli-tools",
+  "name": "netresearch/cli-tools-skill",
+  "replace": {
+    "netresearch/agent-cli-tools": "self.version"
+  },
   "description": "Netresearch AI skill for CLI tool management, auto-installation and environment setup",
   "type": "ai-agent-skill",
   "license": "MIT",
