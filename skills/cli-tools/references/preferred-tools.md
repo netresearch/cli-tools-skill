@@ -69,7 +69,7 @@ fd --changed-within 1d
 # Include hidden and ignored files
 fd -HI 'config'
 
-# Find and delete
+# CAUTION: Destructive - preview matches with `fd -e tmp` first, then:
 fd -e tmp -x rm {}
 ```
 
@@ -155,9 +155,9 @@ jq -r '.version' package.json
 
 ### yq instead of sed/awk on YAML
 
-**Install:** `go install github.com/mikefarah/yq/v4@latest` or `pip install yq`
+**Install:** `go install github.com/mikefarah/yq/v4@latest` or `brew install yq` or download binary from https://github.com/mikefarah/yq/releases
 
-Syntax-aware YAML processing that preserves comments and formatting. Note: there are two different tools called `yq` - prefer the Go version (mikefarah/yq).
+Syntax-aware YAML processing that preserves comments and formatting. **Important:** Do NOT use `pip install yq` - that installs kislyuk/yq, a different tool (Python jq wrapper for YAML). This skill documents Mike Farah's Go-based yq.
 
 ```bash
 # Read a value
@@ -341,6 +341,7 @@ hyperfine --export-json bench.json 'command1' 'command2'
 hyperfine --export-csv bench.csv 'command1' 'command2'
 
 # Preparation command (run before each benchmark)
+# NOTE: Clearing page cache requires sudo/root privileges
 hyperfine --prepare 'sync; echo 3 | sudo tee /proc/sys/vm/drop_caches' 'cat large-file'
 
 # Cleanup command (run after each benchmark)
