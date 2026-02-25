@@ -13,6 +13,47 @@ Manage CLI tool installation, environment auditing, and updates.
 2. **Proactive**: Audit project dependencies and tool versions
 3. **Maintenance**: Batch update all managed tools
 
+## Preferred Tools
+
+When multiple tools can accomplish the same task, prefer the modern alternative for speed, correctness, and simpler syntax.
+
+| Instead of... | Use... | Why | Skill |
+|--------------|--------|-----|-------|
+| `grep` on code | `rg` (ripgrep) | 10x faster, respects .gitignore, better regex | file-search |
+| `find` | `fd` | 5x faster, simpler syntax, respects .gitignore | file-search |
+| `grep` on PDFs/docs | `rga` (ripgrep-all) | Searches inside PDFs, Office, archives, SQLite | file-search |
+| `cloc` / `wc -l` | `tokei` or `scc` | 10-100x faster, accurate language detection | file-search |
+| `grep`/`awk` on JSON | `jq` | Structured extraction, handles nesting/escaping | data-tools |
+| `sed`/`awk` on YAML | `yq` | Syntax-aware, preserves comments and formatting | data-tools |
+| `sed` on JSON | `jq` or `dasel` | Correct escaping, handles nested paths | data-tools |
+| `awk`/Python on CSV | `qsv` | Handles quoting, headers, 100x faster on large files | data-tools |
+| `sed` on TOML/XML | `dasel` | Universal format support, in-place editing | data-tools |
+| `diff` on code | `difft` (difftastic) | Syntax-aware, ignores formatting-only changes | git-workflow |
+| `git commit --fixup` | `git absorb` | Auto-detects correct parent commit | git-workflow |
+| Manual security grep | `semgrep --config auto` | Pre-built OWASP/CWE rulesets, AST-aware | security-audit |
+| `time` for benchmarks | `hyperfine` | Statistical analysis, warmup runs, comparison | (this skill) |
+| `cat` for viewing | `bat` | Syntax highlighting, line numbers, git integration | - |
+
+### hyperfine - Command Benchmarking
+
+Statistical benchmarking tool. Use instead of ad-hoc `time` measurements.
+
+```bash
+# Benchmark a command (10 runs with warmup)
+hyperfine 'fd -e py'
+
+# Compare two commands
+hyperfine 'find . -name "*.py"' 'fd -e py'
+
+# With warmup and minimum runs
+hyperfine --warmup 3 --min-runs 20 'rg pattern'
+
+# Export results
+hyperfine --export-markdown bench.md 'command1' 'command2'
+```
+
+**When to use:** When optimizing commands, comparing tool performance, or proving one approach is faster than another. Provides mean, stddev, min, max, and comparison percentages.
+
 ## Triggers
 
 **Reactive** (auto-install):
@@ -159,6 +200,7 @@ When system prevents normal installation, use these alternatives:
 
 - `references/binary_to_tool_map.md` - Binary to catalog mapping
 - `references/project_type_requirements.md` - Project type requirements
+- `references/preferred-tools.md` - Detailed comparison and usage patterns for preferred tools
 
 ---
 
