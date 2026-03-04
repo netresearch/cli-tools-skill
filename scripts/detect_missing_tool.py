@@ -49,7 +49,9 @@ def main():
     # Try to parse as JSON (Claude Code format)
     try:
         data = json.loads(input_data)
-        output = data.get("output", "") or data.get("stdout", "") or data.get("stderr", "")
+        output = (
+            data.get("output", "") or data.get("stdout", "") or data.get("stderr", "")
+        )
     except (json.JSONDecodeError, TypeError):
         output = input_data
 
