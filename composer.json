@@ -1,26 +1,26 @@
 {
-  "name": "netresearch/cli-tools-skill",
-  "replace": {
-    "netresearch/agent-cli-tools": "self.version"
-  },
-  "description": "Netresearch AI skill for CLI tool management, auto-installation and environment setup",
-  "type": "ai-agent-skill",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Netresearch DTT GmbH",
-      "homepage": "https://www.netresearch.de/",
-      "role": "Manufacturer"
+    "name": "netresearch/cli-tools-skill",
+    "replace": {
+        "netresearch/agent-cli-tools": "self.version"
+    },
+    "description": "Netresearch AI skill for CLI tool management, auto-installation and environment setup",
+    "type": "ai-agent-skill",
+    "license": "(MIT AND CC-BY-SA-4.0)",
+    "authors": [
+        {
+            "name": "Netresearch DTT GmbH",
+            "homepage": "https://www.netresearch.de/",
+            "role": "Manufacturer"
+        }
+    ],
+    "require": {
+        "netresearch/composer-agent-skill-plugin": "*"
+    },
+    "extra": {
+        "ai-agent-skill": "skills/cli-tools/SKILL.md"
+    },
+    "support": {
+        "issues": "https://github.com/netresearch/cli-tools-skill/issues",
+        "source": "https://github.com/netresearch/cli-tools-skill"
     }
-  ],
-  "require": {
-    "netresearch/composer-agent-skill-plugin": "*"
-  },
-  "extra": {
-    "ai-agent-skill": "skills/cli-tools/SKILL.md"
-  },
-  "support": {
-    "issues": "https://github.com/netresearch/cli-tools-skill/issues",
-    "source": "https://github.com/netresearch/cli-tools-skill"
-  }
 }
