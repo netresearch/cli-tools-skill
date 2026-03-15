@@ -16,7 +16,7 @@ When a tool installs but still shows "command not found":
 2. **Ensure PATH includes common directories:**
    ```bash
    # Add to ~/.bashrc or ~/.zshrc
-   export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+   export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$HOME/.npm-global/bin:$PATH"
    ```
 
 3. **Reload shell configuration:**

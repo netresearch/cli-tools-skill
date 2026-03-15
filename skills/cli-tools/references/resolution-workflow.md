@@ -17,9 +17,9 @@
 
 3. **If tool exists but not in PATH:**
    ```bash
-   # Find the binary
-   find /usr -name "<tool>" 2>/dev/null
-   find ~/.local -name "<tool>" 2>/dev/null
+   # Find the binary in common locations (avoids slow full-disk scans)
+   find /usr/local/bin /usr/bin /opt -maxdepth 3 -type f -name "<tool>" 2>/dev/null
+   find "$HOME/.local/bin" -maxdepth 1 -type f -name "<tool>" 2>/dev/null
 
    # Add to PATH temporarily
    export PATH="$PATH:/path/to/tool/directory"
@@ -28,7 +28,7 @@
 ## Phase 2: Installation
 
 1. Extract tool name from error
-2. Lookup in `binary_to_tool_map.md` (e.g., `rg` -> `ripgrep`)
+2. Lookup in [binary_to_tool_map.md](./binary_to_tool_map.md) (e.g., `rg` -> `ripgrep`)
 3. Install: `scripts/install_tool.sh <tool> install`
 
 ## Phase 3: Verification (AFTER install)
