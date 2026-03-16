@@ -52,41 +52,40 @@ Automatically detects project types and their requirements:
 
 ## Installation
 
-### Option 1: Via Netresearch Marketplace (Recommended)
+### Marketplace (Recommended)
+
+Add the [Netresearch marketplace](https://github.com/netresearch/claude-code-marketplace) once, then browse and install skills:
 
 ```bash
+# Claude Code
 /plugin marketplace add netresearch/claude-code-marketplace
 ```
 
-Then browse skills with `/plugin`.
+### npx ([skills.sh](https://skills.sh))
 
-### Option 2: Download Release
-
-Download the [latest release](https://github.com/netresearch/cli-tools-skill/releases/latest) and extract to `~/.claude/skills/cli-tools/`
-
-### Option 3: Manual Installation
+Install with any [Agent Skills](https://agentskills.io)-compatible agent:
 
 ```bash
-# Copy to your skills directory
-cp -r cli-tools ~/.claude/skills/
+npx skills add https://github.com/netresearch/cli-tools-skill --skill cli-tools
 ```
 
-### Manual Usage
+### Download Release
+
+Download the [latest release](https://github.com/netresearch/cli-tools-skill/releases/latest) and extract to your agent's skills directory.
+
+### Git Clone
 
 ```bash
-# Install a specific tool
-./scripts/install_tool.sh ripgrep install
-
-# Detect project type
-./scripts/detect_project_type.sh json .
-
-# Audit environment
-./scripts/check_environment.sh audit .
-
-# Update all tools
-./scripts/auto_update.sh update
+git clone https://github.com/netresearch/cli-tools-skill.git
 ```
 
+### Composer (PHP Projects)
+
+```bash
+composer require netresearch/cli-tools-skill
+```
+
+Requires [netresearch/composer-agent-skill-plugin](https://github.com/netresearch/composer-agent-skill-plugin).
 ## Triggers
 
 The skill activates automatically on:
