@@ -1,0 +1,34 @@
+[
+  {
+    "name": "install-ripgrep-fd",
+    "prompt": "Install ripgrep and fd on this system",
+    "assertions": [
+      {
+        "type": "tool_use",
+        "tool": "Bash",
+        "description": "Runs installation commands for ripgrep and fd"
+      },
+      {
+        "type": "content_contains",
+        "value": "ripgrep",
+        "description": "Installs ripgrep package"
+      }
+    ]
+  },
+  {
+    "name": "audit-project-dependencies",
+    "prompt": "Audit this project's CLI tool dependencies",
+    "assertions": [
+      {
+        "type": "tool_use",
+        "tool": "Glob",
+        "description": "Scans project files to detect required tools"
+      },
+      {
+        "type": "content_contains",
+        "value": "missing",
+        "description": "Reports missing or outdated tools"
+      }
+    ]
+  }
+]

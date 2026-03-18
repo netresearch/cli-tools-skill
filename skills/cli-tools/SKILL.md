@@ -1,6 +1,19 @@
 ---
 name: cli-tools
-description: "Use when commands fail with 'command not found', when installing missing CLI tools, when auditing project environments, or when batch-updating managed tools."
+description: "ALWAYS use when ANY command fails with 'command not found', when installing CLI tools (ripgrep, fd, jq, yq, bat, etc.), auditing project environments, or batch-updating tools. Triggers on: command not found, install tool, missing binary, environment audit, update tools, which, apt install, brew install."
+license: "(MIT AND CC-BY-SA-4.0)"
+compatibility: "Requires bash, common package managers."
+metadata:
+  version: "1.4.6"
+  repository: "https://github.com/netresearch/cli-tools-skill"
+  author: "Netresearch DTT GmbH"
+allowed-tools:
+  - "Bash(apt:*)"
+  - "Bash(brew:*)"
+  - "Bash(npm:*)"
+  - "Bash(pip:*)"
+  - "Read"
+  - "Write"
 ---
 
 # CLI Tools Skill
@@ -24,24 +37,9 @@ bash: <tool>: command not found
 
 ## Preferred Tools
 
-When multiple tools can accomplish the same task, prefer the modern alternative for speed, correctness, and simpler syntax.
+Modern alternatives for speed and correctness. See `references/preferred-tools.md` for full table.
 
-| Instead of... | Use... | Why | Skill |
-|--------------|--------|-----|-------|
-| `grep` on code | `rg` (ripgrep) | 10x faster, respects .gitignore | file-search |
-| `find` | `fd` | 5x faster, simpler syntax | file-search |
-| `grep` on PDFs/docs | `rga` (ripgrep-all) | Searches inside PDFs, archives | file-search |
-| `cloc` / `wc -l` | `tokei` or `scc` | 10-100x faster, accurate | file-search |
-| `grep`/`awk` on JSON | `jq` | Structured extraction | data-tools |
-| `sed`/`awk` on YAML | `yq` | Syntax-aware, preserves comments | data-tools |
-| `sed` on JSON | `jq` or `dasel` | Correct escaping | data-tools |
-| `awk`/Python on CSV | `qsv` | Handles quoting, 100x faster | data-tools |
-| `sed` on TOML/XML | `dasel` | Universal format support | data-tools |
-| `diff` on code | `difft` (difftastic) | Syntax-aware diffs | git-workflow |
-| `git commit --fixup` | `git absorb` | Auto-detects parent commit | git-workflow |
-| Manual security grep | `semgrep --config auto` | AST-aware, OWASP rulesets | security-audit |
-| `time` for benchmarks | `hyperfine` | Statistical analysis, comparison | (this skill) |
-| `cat` for viewing | `bat` | Syntax highlighting, git integration | - |
+Key replacements: `grep`->`rg`, `find`->`fd`, JSON->`jq`, YAML->`yq`, `diff`->`difft`, `cat`->`bat`, benchmarks->`hyperfine`, security->`semgrep`.
 
 ## Workflows
 
