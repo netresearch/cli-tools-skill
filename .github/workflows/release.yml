@@ -7,6 +7,6 @@ on:
 
 jobs:
   release:
-    uses: netresearch/skill-repo-skill/.github/workflows/release.yml@bb143f535f7d69a07f2a17e5c339d41233d0c105 # main
+    uses: netresearch/skill-repo-skill/.github/workflows/release.yml@5b3f983ec4a3d9868f26c565f838bf61c7397ce8 # main
     permissions:
       contents: write
