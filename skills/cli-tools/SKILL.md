@@ -4,7 +4,7 @@ description: "Use when ANY command fails with 'command not found', when installi
 license: "(MIT AND CC-BY-SA-4.0)"
 compatibility: "Requires bash, common package managers."
 metadata:
-  version: "1.5.0"
+  version: "1.5.1"
   repository: "https://github.com/netresearch/cli-tools-skill"
   author: "Netresearch DTT GmbH"
 allowed-tools:
