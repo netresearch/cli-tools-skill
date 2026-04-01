@@ -11,23 +11,336 @@
       {
         "type": "content_contains",
         "value": "ripgrep",
-        "description": "Installs ripgrep package"
+        "description": "Mentions ripgrep in output"
+      },
+      {
+        "type": "content_contains",
+        "value": "fd",
+        "description": "Mentions fd in output"
       }
     ]
   },
   {
     "name": "audit-project-dependencies",
-    "prompt": "Audit this project's CLI tool dependencies",
+    "prompt": "Audit this project's CLI tool dependencies and report what's missing or outdated",
     "assertions": [
       {
         "type": "tool_use",
-        "tool": "Glob",
-        "description": "Scans project files to detect required tools"
+        "tool": "Bash",
+        "description": "Runs environment audit or detection scripts"
       },
       {
         "type": "content_contains",
         "value": "missing",
         "description": "Reports missing or outdated tools"
+      }
+    ]
+  },
+  {
+    "name": "command-not-found-rg",
+    "prompt": "I just ran a command and got: bash: rg: command not found. Can you fix this?",
+    "assertions": [
+      {
+        "type": "tool_use",
+        "tool": "Bash",
+        "description": "Checks if rg exists and installs ripgrep"
+      },
+      {
+        "type": "content_contains",
+        "value": "ripgrep",
+        "description": "Identifies rg as ripgrep using binary_to_tool_map"
+      }
+    ]
+  },
+  {
+    "name": "command-not-found-batcat",
+    "prompt": "I'm getting 'bat: command not found' on Ubuntu. Help?",
+    "assertions": [
+      {
+        "type": "tool_use",
+        "tool": "Bash",
+        "description": "Installs bat and handles Debian batcat alias"
+      },
+      {
+        "type": "content_contains",
+        "value": "batcat",
+        "description": "Mentions the Debian batcat alias situation"
+      }
+    ]
+  },
+  {
+    "name": "prefer-modern-tool-grep",
+    "prompt": "I need to search for TODO comments across my entire codebase recursively",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "rg",
+        "description": "Recommends rg (ripgrep) over grep -r"
+      }
+    ]
+  },
+  {
+    "name": "prefer-modern-tool-find",
+    "prompt": "How do I find all Python files in this project?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "fd",
+        "description": "Recommends fd over find"
+      }
+    ]
+  },
+  {
+    "name": "prefer-modern-tool-json",
+    "prompt": "I need to extract the version field from package.json using the command line",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "jq",
+        "description": "Recommends jq for JSON processing instead of grep/sed"
+      }
+    ]
+  },
+  {
+    "name": "prefer-modern-tool-yaml",
+    "prompt": "How can I modify a value in my docker-compose.yml from the command line?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "yq",
+        "description": "Recommends yq for YAML editing instead of sed"
+      }
+    ]
+  },
+  {
+    "name": "detect-project-type-python",
+    "prompt": "What CLI tools does this Python project need? There's a pyproject.toml in the root.",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "python",
+        "description": "Identifies Python project type"
+      },
+      {
+        "type": "content_contains",
+        "value": "ruff",
+        "description": "Recommends ruff or other Python linting tools"
+      }
+    ]
+  },
+  {
+    "name": "detect-project-type-node",
+    "prompt": "I have a package.json. What tools should I have installed for this Node.js project?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "node",
+        "description": "Identifies Node.js runtime requirement"
+      },
+      {
+        "type": "content_contains",
+        "value": "eslint",
+        "description": "Recommends eslint or prettier for Node projects"
+      }
+    ]
+  },
+  {
+    "name": "install-specific-tool-jq",
+    "prompt": "Install jq on this system",
+    "assertions": [
+      {
+        "type": "tool_use",
+        "tool": "Bash",
+        "description": "Runs install command for jq"
+      },
+      {
+        "type": "content_contains",
+        "value": "jq",
+        "description": "Confirms jq installation"
+      }
+    ]
+  },
+  {
+    "name": "batch-update-tools",
+    "prompt": "Update all my CLI tools to their latest versions",
+    "assertions": [
+      {
+        "type": "tool_use",
+        "tool": "Bash",
+        "description": "Runs auto_update.sh or equivalent update commands"
+      }
+    ]
+  },
+  {
+    "name": "path-troubleshooting",
+    "prompt": "I installed ripgrep with cargo but 'rg' still says command not found. What's wrong?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "cargo/bin",
+        "description": "Identifies ~/.cargo/bin PATH issue"
+      },
+      {
+        "type": "content_contains",
+        "value": "PATH",
+        "description": "Explains PATH configuration fix"
+      }
+    ]
+  },
+  {
+    "name": "binary-name-mapping",
+    "prompt": "I need to install the 'ansible' command. What package provides it?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "ansible-core",
+        "description": "Maps ansible binary to ansible-core catalog entry"
+      }
+    ]
+  },
+  {
+    "name": "install-via-script",
+    "prompt": "Use the skill's install script to install shellcheck",
+    "assertions": [
+      {
+        "type": "tool_use",
+        "tool": "Bash",
+        "description": "Runs install_tool.sh shellcheck install"
+      },
+      {
+        "type": "content_contains",
+        "value": "shellcheck",
+        "description": "References shellcheck installation"
+      }
+    ]
+  },
+  {
+    "name": "environment-check-path",
+    "prompt": "Check if my PATH is properly configured for development tools",
+    "assertions": [
+      {
+        "type": "tool_use",
+        "tool": "Bash",
+        "description": "Checks PATH for common tool directories"
+      },
+      {
+        "type": "content_contains",
+        "value": "PATH",
+        "description": "Reports PATH configuration status"
+      }
+    ]
+  },
+  {
+    "name": "catalog-lookup",
+    "prompt": "Is 'terraform' in the cli-tools catalog? What install methods are available?",
+    "assertions": [
+      {
+        "type": "tool_use",
+        "tool": "Read",
+        "description": "Reads catalog/terraform.json"
+      },
+      {
+        "type": "content_contains",
+        "value": "terraform",
+        "description": "Shows terraform catalog entry details"
+      }
+    ]
+  },
+  {
+    "name": "prefer-modern-tool-diff",
+    "prompt": "I want to compare two source files and see a readable diff",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "difft",
+        "description": "Recommends difftastic over plain diff"
+      }
+    ]
+  },
+  {
+    "name": "prefer-modern-tool-benchmark",
+    "prompt": "I want to benchmark how fast two different commands are",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "hyperfine",
+        "description": "Recommends hyperfine over time command"
+      }
+    ]
+  },
+  {
+    "name": "security-tool-suggestion",
+    "prompt": "I want to scan my Python code for security vulnerabilities from the command line",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "semgrep",
+        "description": "Recommends semgrep or bandit for security scanning"
+      }
+    ]
+  },
+  {
+    "name": "install-permission-blocked",
+    "prompt": "I can't use sudo to install tools. How can I install ripgrep without root access?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "cargo",
+        "description": "Suggests cargo install or manual binary download as non-root alternatives"
+      }
+    ]
+  },
+  {
+    "name": "hash-stale-after-install",
+    "prompt": "I just installed a tool but bash still says command not found even though which shows it. What's happening?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "hash",
+        "description": "Recommends hash -r to clear shell command cache"
+      }
+    ]
+  },
+  {
+    "name": "docker-project-tools",
+    "prompt": "What tools should I have for a project with Dockerfiles and docker-compose.yml?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "docker",
+        "description": "Lists docker as required"
+      },
+      {
+        "type": "content_contains",
+        "value": "dive",
+        "description": "Recommends dive or trivy for Docker projects"
+      }
+    ]
+  },
+  {
+    "name": "csv-processing-tool",
+    "prompt": "I need to filter and sort a large CSV file from the command line. What tool should I use?",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "qsv",
+        "description": "Recommends qsv over awk for CSV processing"
+      }
+    ]
+  },
+  {
+    "name": "tool-integration-pipeline",
+    "prompt": "Show me how to combine fd and rg to find YAML files containing a specific key",
+    "assertions": [
+      {
+        "type": "content_contains",
+        "value": "fd",
+        "description": "Uses fd to find files"
+      },
+      {
+        "type": "content_contains",
+        "value": "rg",
+        "description": "Uses rg to search content"
       }
     ]
   }

@@ -18,68 +18,71 @@ allowed-tools:
 
 # CLI Tools Skill
 
-Manage CLI tool installation, environment auditing, and updates.
+Install, audit, update, and recommend CLI tools across 74 cataloged entries.
 
 ## Triggers
 
-**Reactive** (auto-install):
-```
-bash: <tool>: command not found
-```
+- **Reactive**: `command not found` errors -- auto-resolve
+- **Proactive**: "check environment", "install X", "update tools"
+- **Advisory**: Recommend modern alternatives (`grep`->`rg`, `find`->`fd`, JSON->`jq`)
 
-**Proactive** (audit): "check environment", "what's missing", "update tools"
+## Preferred Modern Tools
 
-## Capabilities
+Recommend over legacy equivalents. See `references/preferred-tools.md` for examples.
 
-1. **Reactive**: Auto-install missing tools on "command not found"
-2. **Proactive**: Audit project dependencies and tool versions
-3. **Maintenance**: Batch update all managed tools
-
-## Preferred Tools
-
-Modern alternatives for speed and correctness. See `references/preferred-tools.md` for full table.
-
-Key replacements: `grep`->`rg`, `find`->`fd`, JSON->`jq`, YAML->`yq`, `diff`->`difft`, `cat`->`bat`, benchmarks->`hyperfine`, security->`semgrep`.
+| Legacy | Modern | Legacy | Modern |
+|--------|--------|--------|--------|
+| `grep -r` | `rg` | `diff` | `difft` |
+| `find` | `fd` | `time` | `hyperfine` |
+| grep on JSON | `jq` | `cat` | `bat` |
+| sed on YAML | `yq` | `cloc` | `tokei`/`scc` |
+| awk on CSV | `qsv` | grep for sec | `semgrep` |
+| sed on TOML | `dasel` | | |
 
 ## Workflows
 
 ### Missing Tool Resolution
 
-1. Diagnose: check if tool exists elsewhere (`which`, `command -v`, `type -a`)
-2. Install: lookup in `references/binary_to_tool_map.md`, run `scripts/install_tool.sh <tool> install`
-3. Verify: confirm with `which <tool>` and `<tool> --version`, retry original command
+1. **Diagnose**: `which <tool>`, `command -v <tool>`, `type -a <tool>`
+2. **Map binary**: Check `references/binary_to_tool_map.md` (`rg`->`ripgrep`, `ansible`->`ansible-core`, `batcat`->`bat`)
+3. **Install**: `scripts/install_tool.sh <tool> install`
+4. **Verify**: `which <tool>` + `<tool> --version`; if still missing: `hash -r`, check PATH
 
-See `references/resolution-workflow.md` for detailed diagnostic and verification steps.
+See `references/resolution-workflow.md` for full diagnostic steps.
 
 ### Environment Audit
 
-```bash
-scripts/check_environment.sh audit .
-```
+Run `scripts/check_environment.sh audit .` and `scripts/detect_project_type.sh`, then cross-reference with `references/project_type_requirements.md` for per-type tool lists.
+
+### Batch Update
+
+`scripts/auto_update.sh` (all managers) or `scripts/install_tool.sh <tool> update` (single).
+
+## Troubleshooting
+
+| Symptom | Fix |
+|---------|-----|
+| Installed but not found | `hash -r` or add dir to PATH |
+| No sudo | `cargo install`, `pip install --user`, manual binary |
+| Debian `bat`=`batcat`, `fd`=`fdfind` | Symlink to `~/.local/bin/` |
+
+See `references/troubleshooting.md` for Docker fallbacks and permission workarounds.
 
 ## Scripts
 
 | Script | Purpose |
 |--------|---------|
-| `install_tool.sh` | Install/update/uninstall tools |
-| `auto_update.sh` | Batch update package managers |
-| `check_environment.sh` | Audit environment |
-| `detect_project_type.sh` | Detect project type |
-
-## Catalog (74 tools)
-
-Core CLI, Languages, Package Managers, DevOps, Linters, Security, Git Tools
+| `scripts/install_tool.sh` | Install/update/uninstall/status |
+| `scripts/auto_update.sh` | Batch update package managers |
+| `scripts/check_environment.sh` | Audit environment and PATH |
+| `scripts/detect_project_type.sh` | Detect project type |
 
 ## References
 
-| Reference | Use when... |
-|-----------|-------------|
-| `references/binary_to_tool_map.md` | Mapping binary names to catalog entries |
-| `references/project_type_requirements.md` | Checking what tools a project type needs |
-| `references/preferred-tools.md` | Detailed usage patterns and examples for preferred tools |
-| `references/resolution-workflow.md` | Full diagnostic/install/verify workflow for missing tools |
-| `references/troubleshooting.md` | PATH issues, permission problems, installation blocked |
-
----
-
-> **Contributing:** https://github.com/netresearch/cli-tools-skill
+| File | Purpose |
+|------|---------|
+| `references/binary_to_tool_map.md` | Binary-to-catalog mapping |
+| `references/project_type_requirements.md` | Tools per project type |
+| `references/preferred-tools.md` | Modern tool usage patterns |
+| `references/resolution-workflow.md` | Diagnostic/install/verify flow |
+| `references/troubleshooting.md` | PATH, permissions, fallbacks |
