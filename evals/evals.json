@@ -5,8 +5,8 @@
     "assertions": [
       {
         "type": "tool_use",
-        "tool": "Bash",
-        "description": "Runs installation commands for ripgrep and fd"
+        "description": "Runs installation commands for ripgrep and fd",
+        "value": "Bash"
       },
       {
         "type": "content_contains",
@@ -26,8 +26,8 @@
     "assertions": [
       {
         "type": "tool_use",
-        "tool": "Bash",
-        "description": "Runs environment audit or detection scripts"
+        "description": "Runs environment audit or detection scripts",
+        "value": "Bash"
       },
       {
         "type": "content_contains",
@@ -42,8 +42,8 @@
     "assertions": [
       {
         "type": "tool_use",
-        "tool": "Bash",
-        "description": "Checks if rg exists and installs ripgrep"
+        "description": "Checks if rg exists and installs ripgrep",
+        "value": "Bash"
       },
       {
         "type": "content_contains",
@@ -58,8 +58,8 @@
     "assertions": [
       {
         "type": "tool_use",
-        "tool": "Bash",
-        "description": "Installs bat and handles Debian batcat alias"
+        "description": "Installs bat and handles Debian batcat alias",
+        "value": "Bash"
       },
       {
         "type": "content_contains",
@@ -76,6 +76,11 @@
         "type": "content_contains",
         "value": "rg",
         "description": "Recommends rg (ripgrep) over grep -r"
+      },
+      {
+        "type": "content_contains",
+        "value": "ripgrep",
+        "description": "Explains rg is the ripgrep binary"
       }
     ]
   },
@@ -87,6 +92,11 @@
         "type": "content_contains",
         "value": "fd",
         "description": "Recommends fd over find"
+      },
+      {
+        "type": "content_contains",
+        "value": ".py",
+        "description": "Shows how to filter by Python file extension"
       }
     ]
   },
@@ -98,6 +108,11 @@
         "type": "content_contains",
         "value": "jq",
         "description": "Recommends jq for JSON processing instead of grep/sed"
+      },
+      {
+        "type": "content_contains",
+        "value": ".version",
+        "description": "Shows jq path expression to extract version field"
       }
     ]
   },
@@ -109,6 +124,11 @@
         "type": "content_contains",
         "value": "yq",
         "description": "Recommends yq for YAML editing instead of sed"
+      },
+      {
+        "type": "content_contains",
+        "value": "docker-compose",
+        "description": "References docker-compose.yml editing"
       }
     ]
   },
@@ -150,8 +170,8 @@
     "assertions": [
       {
         "type": "tool_use",
-        "tool": "Bash",
-        "description": "Runs install command for jq"
+        "description": "Runs install command for jq",
+        "value": "Bash"
       },
       {
         "type": "content_contains",
@@ -166,8 +186,13 @@
     "assertions": [
       {
         "type": "tool_use",
-        "tool": "Bash",
-        "description": "Runs auto_update.sh or equivalent update commands"
+        "description": "Runs auto_update.sh or equivalent update commands",
+        "value": "Bash"
+      },
+      {
+        "type": "content_contains",
+        "value": "update",
+        "description": "References updating tools to latest versions"
       }
     ]
   },
@@ -195,6 +220,11 @@
         "type": "content_contains",
         "value": "ansible-core",
         "description": "Maps ansible binary to ansible-core catalog entry"
+      },
+      {
+        "type": "content_contains",
+        "value": "ansible",
+        "description": "References the ansible binary name"
       }
     ]
   },
@@ -204,8 +234,8 @@
     "assertions": [
       {
         "type": "tool_use",
-        "tool": "Bash",
-        "description": "Runs install_tool.sh shellcheck install"
+        "description": "Runs install_tool.sh shellcheck install",
+        "value": "Bash"
       },
       {
         "type": "content_contains",
@@ -220,8 +250,8 @@
     "assertions": [
       {
         "type": "tool_use",
-        "tool": "Bash",
-        "description": "Checks PATH for common tool directories"
+        "description": "Checks PATH for common tool directories",
+        "value": "Bash"
       },
       {
         "type": "content_contains",
@@ -236,8 +266,8 @@
     "assertions": [
       {
         "type": "tool_use",
-        "tool": "Read",
-        "description": "Reads catalog/terraform.json"
+        "description": "Reads catalog/terraform.json",
+        "value": "Read"
       },
       {
         "type": "content_contains",
@@ -254,6 +284,11 @@
         "type": "content_contains",
         "value": "difft",
         "description": "Recommends difftastic over plain diff"
+      },
+      {
+        "type": "content_contains",
+        "value": "diff",
+        "description": "Compares difftastic against traditional diff"
       }
     ]
   },
@@ -265,6 +300,11 @@
         "type": "content_contains",
         "value": "hyperfine",
         "description": "Recommends hyperfine over time command"
+      },
+      {
+        "type": "content_contains",
+        "value": "benchmark",
+        "description": "Explains benchmarking methodology"
       }
     ]
   },
@@ -276,6 +316,11 @@
         "type": "content_contains",
         "value": "semgrep",
         "description": "Recommends semgrep or bandit for security scanning"
+      },
+      {
+        "type": "content_contains",
+        "value": "security",
+        "description": "Addresses security vulnerability scanning"
       }
     ]
   },
@@ -287,6 +332,11 @@
         "type": "content_contains",
         "value": "cargo",
         "description": "Suggests cargo install or manual binary download as non-root alternatives"
+      },
+      {
+        "type": "content_contains",
+        "value": "ripgrep",
+        "description": "References ripgrep as the target tool to install"
       }
     ]
   },
@@ -298,6 +348,11 @@
         "type": "content_contains",
         "value": "hash",
         "description": "Recommends hash -r to clear shell command cache"
+      },
+      {
+        "type": "content_contains",
+        "value": "cache",
+        "description": "Explains the shell hash table caching mechanism"
       }
     ]
   },
@@ -325,6 +380,11 @@
         "type": "content_contains",
         "value": "qsv",
         "description": "Recommends qsv over awk for CSV processing"
+      },
+      {
+        "type": "content_contains",
+        "value": "CSV",
+        "description": "Addresses CSV file processing use case"
       }
     ]
   },
