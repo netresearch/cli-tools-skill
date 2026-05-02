@@ -1,0 +1,38 @@
+{
+  "name": "@netresearch/cli-tools-skill",
+  "version": "0.0.0-source",
+  "description": "Netresearch AI skill for CLI tool management, auto-installation and environment setup.",
+  "license": "(MIT AND CC-BY-SA-4.0)",
+  "author": "Netresearch DTT GmbH (https://www.netresearch.de/)",
+  "homepage": "https://github.com/netresearch/cli-tools-skill",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/netresearch/cli-tools-skill.git"
+  },
+  "bugs": {
+    "url": "https://github.com/netresearch/cli-tools-skill/issues"
+  },
+  "keywords": [
+    "ai-agent-skill",
+    "cli-tools",
+    "ripgrep",
+    "fd",
+    "jq",
+    "command-not-found",
+    "anthropic",
+    "claude-code"
+  ],
+  "aiAgentSkill": "skills/cli-tools/SKILL.md",
+  "files": [
+    "skills/cli-tools/",
+    "catalog/",
+    "hooks/",
+    "scripts/",
+    "LICENSE-MIT",
+    "LICENSE-CC-BY-SA-4.0",
+    "README.md"
+  ],
+  "peerDependencies": {
+    "@netresearch/agent-skill-coordinator": "^0.1"
+  }
+}
