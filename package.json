@@ -25,6 +25,7 @@
   "aiAgentSkill": "skills/cli-tools/SKILL.md",
   "files": [
     "skills/cli-tools/",
+    "catalog/",
     "hooks/",
     "scripts/",
     "LICENSE-MIT",
