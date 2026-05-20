@@ -16,21 +16,14 @@
       "priority": 1,
       "config": {
         "repo": "boyter/scc",
-        "asset_pattern": "scc_Linux_x86_64.tar.gz"
-      }
-    },
-    {
-      "method": "go",
-      "priority": 2,
-      "config": {
-        "package": "github.com/boyter/scc/v3"
+        "asset_pattern": "scc_Linux_{arch}.tar.gz"
       }
     },
     {
       "method": "brew",
-      "priority": 3,
+      "priority": 2,
       "config": {
-        "package": "scc"
+        "formula": "scc"
       }
     }
   ],

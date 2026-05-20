@@ -17,10 +17,10 @@
       "method": "brew",
       "priority": 2,
       "config": {
-        "package": "tokei"
+        "formula": "tokei"
       }
     }
   ],
-  "requires": ["rust"],
+  "requires": [],
   "tags": ["code-counter", "statistics"]
 }
