@@ -18,7 +18,7 @@ allowed-tools:
 
 # CLI Tools Skill
 
-Install, audit, update, and recommend CLI tools across 74 cataloged entries.
+Install, audit, update, and recommend CLI tools across 77 cataloged entries.
 
 ## Triggers
 

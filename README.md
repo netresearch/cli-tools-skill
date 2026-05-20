@@ -23,7 +23,7 @@ This is an **Agent Skill** following the [open standard](https://agentskills.io)
 
 ## Supported Tools
 
-74+ tools across categories:
+77+ tools across categories:
 
 | Category | Tools |
 |----------|-------|
@@ -138,7 +138,7 @@ Priority: user-level (`~/.local/bin`, `~/.cargo/bin`) over system-level.
 ```
 cli-tools/
 ├── SKILL.md              # Skill definition and workflows
-├── catalog/              # Tool definitions (74+ JSON files)
+├── catalog/              # Tool definitions (77+ JSON files)
 │   ├── ripgrep.json
 │   ├── php.json
 │   └── ...
