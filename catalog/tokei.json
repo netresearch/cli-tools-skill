@@ -1,0 +1,26 @@
+{
+  "name": "tokei",
+  "install_method": "auto",
+  "description": "Count your code quickly - statistics on code by language",
+  "homepage": "https://github.com/XAMPPRocky/tokei",
+  "github_repo": "XAMPPRocky/tokei",
+  "binary_name": "tokei",
+  "available_methods": [
+    {
+      "method": "cargo",
+      "priority": 1,
+      "config": {
+        "crate": "tokei"
+      }
+    },
+    {
+      "method": "brew",
+      "priority": 2,
+      "config": {
+        "formula": "tokei"
+      }
+    }
+  ],
+  "requires": [],
+  "tags": ["code-counter", "statistics"]
+}
