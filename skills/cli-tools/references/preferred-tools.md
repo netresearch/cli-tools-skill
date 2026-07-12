@@ -34,7 +34,7 @@ CAUTION: `fd -e tmp -x rm {}` is destructive — preview matches with
 https://github.com/phiresky/ripgrep-all/releases
 
 Searches inside PDFs, Office docs, ZIP archives, and SQLite databases by
-converting to text on-the-fly: `rga 'financial statement' ./reports/`
+converting to text on-the-fly: `rga 'financial statement' <path>`
 
 ### tokei / scc instead of cloc or wc -l
 
@@ -97,7 +97,7 @@ git config --global difftool.difftastic.cmd 'difft "$LOCAL" "$REMOTE"'
 **Install:** `cargo install git-absorb`
 
 Auto-identifies which staged hunks belong to which prior commit and
-creates the fixup commits: `git add -p && git absorb --dry-run`.
+creates the fixup commits: `git add -p && git absorb`.
 
 ---
 
