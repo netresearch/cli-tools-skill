@@ -95,3 +95,23 @@ When system prevents normal installation, use these alternatives:
    npm install -g <tool> --prefix ~/.npm-global
    cargo install <tool>  # Installs to ~/.cargo/bin
    ```
+
+## Batch Updaters That "Freeze"
+
+A batch update script that suppresses output (`cmd >/dev/null 2>&1`) but leaves
+stdin attached to the terminal turns any hidden interactive prompt into an
+invisible, indefinite hang — observed with `composer global update` waiting
+hours on an unseen GitHub-token prompt.
+
+When wrapping package-manager commands for unattended runs:
+
+1. **Detach stdin**: run every command `</dev/null` so a prompt hits EOF and
+   fails fast instead of blocking on the terminal.
+2. **Prefer the tool's non-interactive flag** (`composer --no-interaction`,
+   `apt-get -y` + `DEBIAN_FRONTEND=noninteractive`, `npm --yes`).
+3. **Surface failures**: don't `|| true` into silence — capture output to a
+   temp file and print the exit code plus the last ~20 lines when a command
+   fails, or the hang/failure is undiagnosable.
+4. **Diagnose a stuck run** via `/proc/<pid>/fd` (fd 0 → `/dev/pts/*` with
+   fd 1/2 → `/dev/null` = waiting on an invisible prompt) and
+   `/proc/<pid>/wchan` (`wait_woken` ≈ tty read).
