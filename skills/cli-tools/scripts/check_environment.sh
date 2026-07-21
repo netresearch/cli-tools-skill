@@ -89,7 +89,11 @@ check_duplicates() {
 
     for tool in "${tools[@]}"; do
         local paths
-        paths=$(type -a "$tool" 2>/dev/null | grep -c "is" || echo 0)
+        # grep -c always prints a count (even 0), but exits 1 when that count is
+        # 0; under `set -o pipefail` that nonzero exit used to trigger `|| echo 0`
+        # as well, appending a second "0" line and breaking the -gt comparison
+        # below. `|| true` keeps the count grep already printed as the only output.
+        paths=$(type -a "$tool" 2>/dev/null | grep -c "is" || true)
         if [ "$paths" -gt 1 ]; then
             log_warn "$tool has multiple installations:"
             type -a "$tool" 2>/dev/null | head -5
@@ -178,10 +182,14 @@ run_audit() {
     echo "═══════════════════════════════════════════════"
     echo ""
 
-    check_path
+    # check_path/check_duplicates return their issue count by design (not a
+    # fatal error); under `set -e` a bare call aborts run_audit at the first
+    # issue found instead of completing the rest of the audit, the same
+    # hazard the check_tool calls below are already guarded against.
+    check_path || true
     echo ""
 
-    check_duplicates
+    check_duplicates || true
     echo ""
 
     check_package_managers
