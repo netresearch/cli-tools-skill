@@ -115,3 +115,55 @@ When wrapping package-manager commands for unattended runs:
 4. **Diagnose a stuck run** via `/proc/<pid>/fd` (fd 0 → `/dev/pts/*` with
    fd 1/2 → `/dev/null` = waiting on an invisible prompt) and
    `/proc/<pid>/wchan` (`wait_woken` ≈ tty read).
+
+## `timeout` Is Not Portable — Guard It
+
+`timeout` is GNU coreutils. A stock macOS does **not** ship it (Homebrew
+coreutils provides `gtimeout`), so a hard-coded `timeout 2 <tool> --version`
+does not merely lose its time bound — the whole command fails with
+`timeout: command not found`, producing **empty output**. Wrapped in the usual
+`|| true` / `2>/dev/null`, that failure is silent, and every downstream check
+sees "the tool produced nothing" rather than "the guard is missing". Symptom on
+a CI matrix: a step that works on `ubuntu-latest` and fails on `macos-latest`
+with the tool reported as absent or unversioned.
+
+Resolve it once and reuse:
+
+```bash
+run_bounded() {            # run_bounded SECONDS CMD...
+  local secs="$1"; shift
+  if command -v timeout >/dev/null 2>&1;  then timeout  "$secs" "$@"
+  elif command -v gtimeout >/dev/null 2>&1; then gtimeout "$secs" "$@"
+  else "$@"                # no bound available — still correct, just unbounded
+  fi
+}
+```
+
+Falling back to an unbounded run is the right default: `</dev/null` is what
+actually prevents the common hang (a command blocking on a prompt), and it is
+portable. The timeout is the second line of defence, for a command that blocks
+on something other than stdin.
+
+## Probing a Tool for a Capability: Validate the Output Shape
+
+When detecting whether a CLI supports something by *running* it
+(`<tool> completion bash`, `<tool> --version`, `<tool> config get …`), a
+non-zero exit is not the only failure mode, and neither is empty output. A tool
+that does not recognise the subcommand may **treat your probe words as
+arguments and do real work**: `bandit complete bash` runs a security scan over
+paths named `complete` and `bash`, exits 0, and prints a report that contains
+the word "complete" — passing any check that merely greps for a keyword.
+
+So:
+
+1. **Validate the shape of what came back**, not just that something did. For a
+   bash completion script, require an actual registration
+   (`complete -…`, `compgen `, `COMPREPLY`) rather than the substring
+   `complete`.
+2. **Run probes from a scratch directory** with stdin detached, so a
+   misinterpreted argument cannot match real files or consume input.
+3. **Confirm the result refers to the tool you probed.** A wrapper can return
+   its host's answer: `rga --generate complete-bash` forwards to ripgrep and
+   returns ripgrep's script verbatim, and a `gh` extension's `completion`
+   subcommand can emit `gh`'s own completion. Installing either under the
+   wrapper's name shadows the host tool.
