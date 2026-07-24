@@ -89,11 +89,11 @@ check_duplicates() {
 
     for tool in "${tools[@]}"; do
         local paths
-        # grep -c always prints a count (even 0), but exits 1 when that count is
-        # 0; under `set -o pipefail` that nonzero exit used to trigger `|| echo 0`
-        # as well, appending a second "0" line and breaking the -gt comparison
-        # below. `|| true` keeps the count grep already printed as the only output.
-        paths=$(type -a "$tool" 2>/dev/null | grep -c "is" || true)
+        # `type -p -a` prints one absolute path per executable found, so wc -l is
+        # the install count — locale-independent, unlike parsing `type -a`'s prose
+        # (which localizes "is"/"ist"/"est" and broke the count in non-English
+        # locales). `|| true` guards the empty-result case under set -o pipefail.
+        paths=$(type -p -a "$tool" 2>/dev/null | wc -l | tr -d ' ' || true)
         if [ "$paths" -gt 1 ]; then
             log_warn "$tool has multiple installations:"
             type -a "$tool" 2>/dev/null | head -5

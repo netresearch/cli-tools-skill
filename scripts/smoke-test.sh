@@ -27,11 +27,15 @@ echo "=== smoke-test: catalog resolution ==="
 
 # Every catalog entry must resolve via install_tool.sh's own lookup, proving
 # the DIR/../../../catalog (via lib/root.sh) math matches the real layout.
-catalog_count=$(find "$REPO_ROOT/catalog" -name '*.json' | wc -l)
-if [ "$catalog_count" -lt 1 ]; then
-  fail "catalog directory empty or missing at $REPO_ROOT/catalog"
+if [ ! -d "$REPO_ROOT/catalog" ]; then
+  fail "catalog directory missing at $REPO_ROOT/catalog"
 else
-  pass "catalog directory found ($catalog_count entries)"
+  catalog_count=$(find "$REPO_ROOT/catalog" -name '*.json' | wc -l)
+  if [ "$catalog_count" -lt 1 ]; then
+    fail "catalog directory empty at $REPO_ROOT/catalog"
+  else
+    pass "catalog directory found ($catalog_count entries)"
+  fi
 fi
 
 # A known-good tool must report a real install_method, not "No catalog entry
@@ -63,14 +67,14 @@ echo "=== smoke-test: full installer round-trip ==="
 # PREFIX (read by lib/install_strategy.sh's get_install_dir) isolates the
 # install to a scratch dir instead of touching the real ~/.local/bin.
 TMP_PREFIX="$(mktemp -d)"
-if PREFIX="$TMP_PREFIX" bash "$SCRIPTS/installers/github_release_binary.sh" fd >/tmp/smoke-fd-install.log 2>&1; then
+if PREFIX="$TMP_PREFIX" bash "$SCRIPTS/installers/github_release_binary.sh" fd >"$TMP_PREFIX/smoke-fd-install.log" 2>&1; then
   if [ -x "$TMP_PREFIX/bin/fd" ] && "$TMP_PREFIX/bin/fd" --version >/dev/null 2>&1; then
     pass "github_release_binary.sh installed a working fd: $("$TMP_PREFIX/bin/fd" --version)"
   else
-    fail "github_release_binary.sh reported success but $TMP_PREFIX/bin/fd is missing or broken:"$'\n'"$(cat /tmp/smoke-fd-install.log)"
+    fail "github_release_binary.sh reported success but $TMP_PREFIX/bin/fd is missing or broken:"$'\n'"$(cat "$TMP_PREFIX/smoke-fd-install.log")"
   fi
 else
-  fail "github_release_binary.sh fd install failed:"$'\n'"$(cat /tmp/smoke-fd-install.log)"
+  fail "github_release_binary.sh fd install failed:"$'\n'"$(cat "$TMP_PREFIX/smoke-fd-install.log")"
 fi
 rm -rf "$TMP_PREFIX"
 
