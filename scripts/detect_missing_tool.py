@@ -4,9 +4,9 @@ Detect "command not found" errors in Bash tool output.
 Outputs a system reminder suggesting the cli-tools skill when a missing tool is detected.
 """
 
-import sys
-import re
 import json
+import re
+import sys
 
 # Patterns that indicate a missing command/tool
 MISSING_PATTERNS = [
@@ -40,7 +40,7 @@ def main():
     # Read tool output from stdin (Claude Code passes tool result)
     try:
         input_data = sys.stdin.read()
-    except Exception:
+    except Exception:  # noqa: BLE001 - hook must fail open on any stdin read error
         return
 
     if not input_data:
