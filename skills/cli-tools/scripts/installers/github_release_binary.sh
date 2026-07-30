@@ -67,12 +67,24 @@ fi
 
 # Fallback to GitHub releases if no version URL
 if [ -z "$LATEST" ] && [ -n "$GITHUB_REPO" ]; then
-  LATEST="$(curl -fsSIL -H "User-Agent: cli-audit" -o /dev/null -w '%{url_effective}' \
-    "https://github.com/$GITHUB_REPO/releases/latest" 2>/dev/null | awk -F'/' '{print $NF}')"
+  # Authenticated API first when a token is available: anonymous requests
+  # from shared CI runner IPs are frequently rate-limited.
+  if [[ -n "${GITHUB_TOKEN:-}" ]]; then
+    LATEST="$(curl --proto '=https' -fsSL -H "Authorization: Bearer $GITHUB_TOKEN" -H "User-Agent: cli-audit" \
+      "https://api.github.com/repos/$GITHUB_REPO/releases/latest" 2>/dev/null | \
+      jq -r '.tag_name // empty' 2>/dev/null || true)"
+  fi
+  # The `|| true` is load-bearing: under `set -eo pipefail` an unguarded
+  # failing curl inside this assignment kills the whole script with zero
+  # output (stderr is /dev/null'd) instead of reaching the error below.
+  if [[ -z "$LATEST" ]]; then
+    LATEST="$(curl --proto '=https' -fsSIL -H "User-Agent: cli-audit" -o /dev/null -w '%{url_effective}' \
+      "https://github.com/$GITHUB_REPO/releases/latest" 2>/dev/null | awk -F'/' '{print $NF}' || true)"
+  fi
 fi
 
 if [ -z "$LATEST" ]; then
-  echo "[$TOOL] Error: Unable to resolve latest version" >&2
+  echo "[$TOOL] Error: Unable to resolve latest version (network failure or GitHub rate limit)" >&2
   echo "[$TOOL] before: ${before:-<none>}" >&2
   exit 1
 fi
@@ -241,15 +253,21 @@ if [ -n "$EXTRACT_DIR" ] && [ -d "$EXTRACT_DIR" ]; then
   rm -rf "$EXTRACT_DIR"
 fi
 
-# Report
-after="$(command -v "$BINARY_NAME" >/dev/null 2>&1 && \
-  (timeout 2 "$BINARY_NAME" --version </dev/null 2>/dev/null || \
-   timeout 2 "$BINARY_NAME" version --client </dev/null 2>/dev/null | head -1 || \
-   timeout 2 "$BINARY_NAME" version </dev/null 2>/dev/null | head -1 || true))"
-path="$(command -v "$BINARY_NAME" 2>/dev/null || true)"
+# Report — probe the binary we actually installed, never a PATH lookup:
+# $BIN_DIR may not be on PATH (isolated PREFIX in CI), where the old
+# `command -v && (...)` substitution exited non-zero and set -e killed the
+# script silently right here; with multiple installs a PATH lookup can also
+# resolve a different copy than the one just written.
+installed_bin="$BIN_DIR/$BINARY_NAME"
+after=""
+if [[ -x "$installed_bin" ]]; then
+  after="$(timeout 2 "$installed_bin" --version </dev/null 2>/dev/null || \
+           timeout 2 "$installed_bin" version --client </dev/null 2>/dev/null | head -1 || \
+           timeout 2 "$installed_bin" version </dev/null 2>/dev/null | head -1 || true)"
+fi
 printf "[%s] before: %s\n" "$TOOL" "${before:-<none>}"
 printf "[%s] after:  %s\n" "$TOOL" "${after:-<none>}"
-if [ -n "$path" ]; then printf "[%s] path:   %s\n" "$TOOL" "$path"; fi
+printf "[%s] path:   %s\n" "$TOOL" "$installed_bin"
 
 # Refresh snapshot after successful installation
 refresh_snapshot "$TOOL" || true
