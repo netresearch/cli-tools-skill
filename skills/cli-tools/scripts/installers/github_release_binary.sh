@@ -67,12 +67,24 @@ fi
 
 # Fallback to GitHub releases if no version URL
 if [ -z "$LATEST" ] && [ -n "$GITHUB_REPO" ]; then
-  LATEST="$(curl -fsSIL -H "User-Agent: cli-audit" -o /dev/null -w '%{url_effective}' \
-    "https://github.com/$GITHUB_REPO/releases/latest" 2>/dev/null | awk -F'/' '{print $NF}')"
+  # Authenticated API first when a token is available: anonymous requests
+  # from shared CI runner IPs are frequently rate-limited.
+  if [ -n "${GITHUB_TOKEN:-}" ]; then
+    LATEST="$(curl -fsSL -H "Authorization: Bearer $GITHUB_TOKEN" -H "User-Agent: cli-audit" \
+      "https://api.github.com/repos/$GITHUB_REPO/releases/latest" 2>/dev/null | \
+      jq -r '.tag_name // empty' 2>/dev/null || true)"
+  fi
+  # The `|| true` is load-bearing: under `set -eo pipefail` an unguarded
+  # failing curl inside this assignment kills the whole script with zero
+  # output (stderr is /dev/null'd) instead of reaching the error below.
+  if [ -z "$LATEST" ]; then
+    LATEST="$(curl -fsSIL -H "User-Agent: cli-audit" -o /dev/null -w '%{url_effective}' \
+      "https://github.com/$GITHUB_REPO/releases/latest" 2>/dev/null | awk -F'/' '{print $NF}' || true)"
+  fi
 fi
 
 if [ -z "$LATEST" ]; then
-  echo "[$TOOL] Error: Unable to resolve latest version" >&2
+  echo "[$TOOL] Error: Unable to resolve latest version (network failure or GitHub rate limit)" >&2
   echo "[$TOOL] before: ${before:-<none>}" >&2
   exit 1
 fi
