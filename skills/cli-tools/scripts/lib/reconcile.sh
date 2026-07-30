@@ -44,8 +44,17 @@ remove_installation() {
       ;;
     cargo)
       if command -v cargo >/dev/null 2>&1; then
-        echo "[$tool] Uninstalling cargo package: $tool" >&2
-        cargo uninstall "$tool" 2>/dev/null || true
+        # cargo uninstall needs the crate name, which can differ from the
+        # binary (git-delta installs `delta`, watchexec-cli installs
+        # `watchexec`) — map binary → owning crate via `cargo install --list`.
+        local crate
+        crate="$(cargo install --list 2>/dev/null | awk -v bin="$binary" -v tool="$tool" '
+          /^[^[:space:]]/ { pkg = $1 }
+          /^[[:space:]]/  { if ($1 == bin || $1 == tool) { print pkg; exit } }')"
+        crate="${crate:-$tool}"
+        echo "[$tool] Uninstalling cargo package: $crate" >&2
+        cargo uninstall "$crate" 2>/dev/null \
+          || echo "[$tool] Warning: cargo uninstall $crate failed" >&2
       fi
       ;;
     npm)
@@ -297,6 +306,12 @@ reconcile_tool() {
 
   # Verify installation
   if command -v "$binary_name" >/dev/null 2>&1; then
+    # Presence is not function: a surviving wrapper script can depend on
+    # files the removed package owned (byobu's launcher sources
+    # /usr/lib/byobu), so probe that the binary actually runs.
+    if ! "$binary_name" --version >/dev/null 2>&1 && ! "$binary_name" version >/dev/null 2>&1; then
+      echo "[$tool] Warning: $binary_name is on PATH but does not run — the removal may have broken a wrapper that depended on the removed package" >&2
+    fi
     local new_method
     new_method="$(detect_install_method "$tool" "$binary_name")"
     echo "[$tool] ✓ Reconciliation complete: now installed via $new_method" >&2
