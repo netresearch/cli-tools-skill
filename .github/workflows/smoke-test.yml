@@ -16,4 +16,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Run smoke test
+        env:
+          # Installer release resolution: anonymous GitHub requests from
+          # shared runner IPs are rate-limited and made the round-trip flaky.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: bash scripts/smoke-test.sh
