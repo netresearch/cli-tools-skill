@@ -66,8 +66,11 @@ echo "=== smoke-test: full installer round-trip ==="
 # download -> binary in place) works, not just the catalog lookup in isolation.
 # PREFIX (read by lib/install_strategy.sh's get_install_dir) isolates the
 # install to a scratch dir instead of touching the real ~/.local/bin.
+# bash -x: the installer once died under `set -e` with ZERO output, making
+# the failure undiagnosable from CI logs. The xtrace lands in the install
+# log, which is only ever printed on failure — successes stay quiet.
 TMP_PREFIX="$(mktemp -d)"
-if PREFIX="$TMP_PREFIX" bash "$SCRIPTS/installers/github_release_binary.sh" fd >"$TMP_PREFIX/smoke-fd-install.log" 2>&1; then
+if PREFIX="$TMP_PREFIX" bash -x "$SCRIPTS/installers/github_release_binary.sh" fd >"$TMP_PREFIX/smoke-fd-install.log" 2>&1; then
   if [ -x "$TMP_PREFIX/bin/fd" ] && "$TMP_PREFIX/bin/fd" --version >/dev/null 2>&1; then
     pass "github_release_binary.sh installed a working fd: $("$TMP_PREFIX/bin/fd" --version)"
   else
