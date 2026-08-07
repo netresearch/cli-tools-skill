@@ -63,7 +63,7 @@ Run `scripts/check_environment.sh audit .` and `scripts/detect_project_type.sh`,
 | Symptom | Fix |
 |---------|-----|
 | Installed but not found | `hash -r` or add dir to PATH |
-| No sudo | `cargo install`, `pip install --user`, manual binary |
+| No sudo | `cargo install`, `pip install --user`, manual binary; on Debian/Ubuntu `apt-get download` + `dpkg -x` |
 | Debian `bat`=`batcat`, `fd`=`fdfind` | Symlink to `~/.local/bin/` |
 
 See `references/troubleshooting.md` for Docker fallbacks and permission workarounds.

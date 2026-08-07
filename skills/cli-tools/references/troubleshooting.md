@@ -96,6 +96,37 @@ When system prevents normal installation, use these alternatives:
    cargo install <tool>  # Installs to ~/.cargo/bin
    ```
 
+5. **Extract the distro package (Debian/Ubuntu, no root):**
+
+   `apt-get download` needs no privileges — only `apt-get install` does. Fetch
+   the `.deb`, unpack it somewhere writable, and copy the binary onto PATH:
+
+   ```bash
+   cd "$(mktemp -d)"
+   apt-get download zstd brotli          # add every package you need
+   for d in *.deb; do dpkg -x "$d" ./root; done
+   mkdir -p ~/.local/bin
+   cp ./root/usr/bin/zstd ./root/usr/bin/brotli ~/.local/bin/
+   zstd --version && brotli --version    # confirm they run
+   ```
+
+   Reach for this **first** on Debian/Ubuntu when options 1-4 do not apply: it
+   is faster than compiling and gives the distro's own build, correctly linked
+   against the system's libraries.
+
+   It fits the case the other four miss — a C utility with no GitHub release
+   binary, no pip/npm/cargo package, and a compile that would pull a toolchain.
+   Verified on `zstd` and `brotli`, which a repo's pre-commit hook required
+   while `sudo` wanted a password.
+
+   Caveats: this does **not** resolve dependencies, so a package needing a
+   shared library the host lacks still fails at run time — that is why the
+   version check above is part of the recipe, not an afterthought. Add
+   `~/.local/bin` to PATH if it is not there already (see PATH Issues above).
+   For a library rather than a binary, extract it the same way and point
+   `LD_LIBRARY_PATH` at `./root/usr/lib/...`, but weigh that against a
+   container (option 1) — dozens of interdependent libraries get fragile fast.
+
 ## Batch Updaters That "Freeze"
 
 A batch update script that suppresses output (`cmd >/dev/null 2>&1`) but leaves
