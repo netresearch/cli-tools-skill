@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "cli-tools",
-  "version": "1.9.0",
+  "version": "1.9.1",
   "description": "CLI tool management with automatic missing-tool detection, installation, and auditing",
   "author": {
     "name": "Netresearch DTT GmbH",
