@@ -1,5 +1,7 @@
 # CLI Tools Skill
 
+> **Moved.** The `cli-tools` skill now ships from [`netresearch/coding_agent_cli_toolset`](https://github.com/netresearch/coding_agent_cli_toolset), the repository whose scripts and catalog it always wrapped. This repository is archived. Installing `cli-tools@netresearch-claude-code-marketplace` already gets the new source; an existing installation switches over on `/plugin update`.
+
 A Claude Code skill for automatic CLI tool management. Detects missing tools, installs them via optimal package managers, and audits project environments.
 
 ## 🔌 Compatibility
